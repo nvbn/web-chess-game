@@ -12,7 +12,10 @@
                  [org.clojure/core.async "0.1.346.0-17112a-alpha"]]
 
   :plugins [[lein-cljsbuild "1.0.4"]
-            [lein-figwheel "0.2.5-SNAPSHOT"]]
+            [lein-figwheel "0.2.5"]
+            [lein-bower "0.5.1"]]
+
+  :bower-dependencies [[jquery "2.1.3"]]
 
   :source-paths ["src"]
 
