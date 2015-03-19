@@ -1,4 +1,3 @@
-
 (ns chess-game.environ)
 
 (defonce environment (atom {}))
@@ -14,7 +13,6 @@
 (defn assoc-in-env [keys value]
   "Update the environment."
   (assoc-in @environment keys value))
-
 
 (defn current-env-file []
   "A reference to the current environment file"
