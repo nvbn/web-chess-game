@@ -1,14 +1,8 @@
-;; Note: Let's keep this file mostly stateless.
-;; We don't need to modify the drawing context,
-;; just access some pre-defined shades of
-;; black and white.
-
 (ns chess-game.colors
-  (:require
-   [chess-game.drawing :as d]
-   ))
-
-
+  "Note: Let's keep this file mostly stateless.
+   We don't need to modify the drawing context,
+  just access some pre-defined shades of black and white."
+  (:require [chess-game.drawing :as d]))
 
 (defn gray-scale [scale]
   "Sets the fill color to a gray scale, values ranging between 0 and 255"
