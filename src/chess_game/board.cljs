@@ -3,15 +3,15 @@
             [chess-game.config :as config]
             [chess-game.drawing :as drawing]))
 
-(defn make-chessman [color type start-x start-y]
+(defn make-chessman
+  [color type start-x start-y]
   "Creates a hash table for storing a chessman"
-  (hash-map :color color                                    ; Should only ever be :black or :white
-            :type type                                      ; Should only ever be one of [:pawn, :king, :bishop,
-            :has-moved false                                ;                             :queen, :rook, :knight]
-            :has-moved false
-            :captured false
-            :start-x start-x
-            :start-y start-y))
+  {:color color                                             ; Should only ever be :black or :white
+   :type type                                               ; Should only ever be one of [:pawn, :king, :bishop,
+   :has-moved false                                         ;                             :queen, :rook, :knight]
+   :captured false
+   :start-x start-x
+   :start-y start-y})
 
 (defn standard-board []
   "Standard chess board implemented as a hash table"

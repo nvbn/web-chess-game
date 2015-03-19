@@ -87,4 +87,5 @@
   nil)
 
 (jq/document-ready
-  (setup))
+  (try (setup)
+       (catch :default e (.error js/console e))))
