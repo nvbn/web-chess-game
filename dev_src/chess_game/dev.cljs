@@ -1,10 +1,8 @@
 (ns chess-game.dev
-    (:require
-     [chess-game.core :as core]
-     [figwheel.client :as fw]))
+  (:require [figwheel.client :as fw]
+            [chess-game.core]))
 
-(fw/start {
-  :websocket-url "ws://localhost:3449/figwheel-ws"
-  :on-jsload (fn []
-               ;; (stop-and-start-my app)
-               )})
+(enable-console-print!)
+
+(fw/start {:websocket-url "ws://localhost:3449/figwheel-ws"
+           :on-jsload (fn [] (println "reload"))})
