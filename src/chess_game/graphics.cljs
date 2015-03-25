@@ -1,19 +1,18 @@
-(ns chess-game.graphics)
-
+(ns chess-game.graphics
+  (:require [quil.core :as q]))
 
 ;; Note to self:
 ;;
-;; I'm thinking of making this the only
-;; platform specific part of the drawing
-;; of this game. Most of the other parts
-;; will be platform independent, although
-;; still written in ClojureScript.
+;; I'm thinking of making these functions
+;; the only platform specific part of the
+;; drawing of this game.
+;;
 
-(defn set-fill! [st color]
+(defn set-fill! [color]
   (q/fill color))
 
 (defn make-color [red green blue]
   (q/color red green blue))
 
-(defn fill-rect [st x y w h]
+(defn fill-rect [x y w h]
   (q/rect x y w h))
