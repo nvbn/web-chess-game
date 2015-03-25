@@ -8,6 +8,7 @@
             [quil.middleware :as m]
             [jayq.core :as jq]))
 
+(enable-console-print!)
 
 (defn setup []
   "Initialize everything"

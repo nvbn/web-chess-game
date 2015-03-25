@@ -1,8 +1,6 @@
 (ns chess-game.config)
 
-(def tile-size 75)
-(def board-width 8)
-(def board-height 8)
+(def tile-size 120)
 
 (def board-tiles-x 8)
 (def board-tiles-y 8)

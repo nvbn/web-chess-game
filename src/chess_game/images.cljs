@@ -71,10 +71,8 @@
 (defn image-for-chessman-color-and-type [color type]
   "Returns image for chessman color and type"
   (cond
-    (.equals color :black)
-    (black-image-for-chessman-type type)
-    (.equals color :white)
-    (white-image-for-chessman-type type)))
+    (= color :black) (black-image-for-chessman-type type)
+    (= color :white) (white-image-for-chessman-type type)))
 
 (defn draw-chessman [chessman pos]
   (let [chessman-type (:type chessman)
