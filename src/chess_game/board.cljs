@@ -13,7 +13,7 @@
    :start-x start-x
    :start-y start-y})
 
-(defn standard-board []
+(defn make-standard-board []
   "Standard chess board implemented as a hash table"
   (hash-map
 
@@ -56,18 +56,3 @@
     '(5 7) (make-chessman :white :bishop 5 7)
     '(6 7) (make-chessman :white :knight 6 7)
     '(7 7) (make-chessman :white :rook 7 7)))
-
-
-(defn draw-checkered-board [env]
-  "Draw the checkered board that all chess games are played on"
-  (let [size config/tile-size]
-    ;; Iterate both i & j over the sequence 0,1,2..9
-    (doseq [i (range 0 config/board-width)
-            j (range 0 config/board-height)]
-
-      (let [ctx (:drawing-context env)
-            selected (= (list i j) (:selected-tile env))
-            fill-color (colors/square-color i j)]
-
-        (drawing/set-fill! ctx (colors/tile-fill-color fill-color selected))
-        (drawing/draw-rect ctx (* i size) (* j size) size size)))))

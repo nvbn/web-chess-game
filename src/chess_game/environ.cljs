@@ -12,7 +12,7 @@
 
 (defn assoc-in-env [keys value]
   "Update the environment."
-  (assoc-in @environment keys value))
+  (swap! environment assoc-in keys value))
 
 (defn current-env-file []
   "A reference to the current environment file"
