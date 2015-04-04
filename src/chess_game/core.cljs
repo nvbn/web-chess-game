@@ -1,12 +1,13 @@
 (ns ^:figwheel-always chess-game.core
-  (:require [chess-game.config :as config]
+  (:require [quil.core :as q]
+            [quil.middleware]
+            [jayq.core :as jq]
+            [clj-di.core :refer [get-dep register!]]
+            [chess-game.config :as config]
             [chess-game.images :as images]
             [chess-game.environ :as env]
             [chess-game.board :as board]
-            [chess-game.drawing :as drawing]
-            [quil.core :as q]
-            [quil.middleware :as m]
-            [jayq.core :as jq]))
+            [chess-game.drawing :as drawing]))
 
 (enable-console-print!)
 
@@ -19,11 +20,11 @@
   ;;
   ;; :selected-tile
   ;; The currently selected tile, after being clicked
-  (env/assoc-in-env [:chessboard] (board/make-standard-board))
-  (env/assoc-in-env [:selected-tile] nil)
-
-
-  (println (env/get-env)))
+  (let [env (atom {})]
+    (swap! env assoc
+           :chessboard (board/make-standard-board)
+           :selected-tile nil)
+    (register! :env env)))
 
 (defn selected-chessman [e]
   (let [selected-tile (:selected-tile e)
@@ -37,7 +38,7 @@
 
 (defn mark-selected-tile [event]
   "Mark the tile selected by the click event"
-  (let [current (env/get-in-env [:selected-tile])
+  (let [current (:selected-tile @(get-dep :env))
         x (.floor js/Math (/ (:x event) config/tile-size))
         y (.floor js/Math (/ (:y event) config/tile-size))
         selected (list x y)]
@@ -54,8 +55,7 @@
   "Handle mouse press"
   (let [event (mouse-event-full)]
     (println event)
-    (mark-selected-tile event)
-    (println (env/get-env))))
+    (mark-selected-tile event)))
 
 (jq/document-ready
   (try (q/sketch :title "Chess board"

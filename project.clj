@@ -7,14 +7,15 @@
             :dependencies [[org.clojure/clojure "1.6.0"]
                            [org.clojure/clojurescript "0.0-3123"]
                            [figwheel "0.2.5"]
-                           [rm-hull/monet "0.2.1"]
                            [jayq "2.5.4"]
                            [org.clojure/core.async "0.1.346.0-17112a-alpha"]
-                           [quil "2.2.5"]]
+                           [quil "2.2.5"]
+                           [clj-di "0.5.0"]]
 
             :plugins [[lein-cljsbuild "1.0.4"]
                       [lein-figwheel "0.2.5"]
-                      [lein-bower "0.5.1"]]
+                      [lein-bower "0.5.1"]
+                      [com.cemerick/clojurescript.test "0.3.1"]]
 
             :bower-dependencies [[jquery "2.1.3"]
                                  [es5-shim "4.0.3"]]

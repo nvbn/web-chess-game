@@ -1,7 +1,7 @@
 (ns chess-game.drawing
-  (:require [chess-game.graphics :as graphics]
+  (:require [clj-di.core :refer [get-dep]]
+            [chess-game.graphics :as graphics]
             [chess-game.images :as images]
-            [chess-game.environ :as env]
             [chess-game.config :as config]))
 
 (defn gray-scale [scale]
@@ -18,9 +18,8 @@
 
 (defn draw-chessmen []
   "Draw all the chessmen"
-  (doseq [pos (keys (env/get-in-env [:chessboard]))]
-    (let [chessman (env/get-in-env [:chessboard pos])]
-      (images/draw-chessman chessman pos))))
+  (doseq [[pos chessman] (:chessboard @(get-dep :env))]
+    (images/draw-chessman chessman pos)))
 
 (defn white-default []
   "Default white color"
@@ -70,7 +69,7 @@ There are probably lots more, but those are just some of them that came off the 
   (tile-fill (square-color x y) selected))
 
 (defn get-color-from [i j]
-  (let [selected (= (list i j) (env/get-in-env [:selected-tile]))]
+  (let [selected (= (list i j) (:selected-tile @(get-dep :env)))]
     (tile-fill-color i j selected)))
 
 (defn draw-checkered-board []
