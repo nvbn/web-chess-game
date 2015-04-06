@@ -14,8 +14,7 @@
 
             :plugins [[lein-cljsbuild "1.0.4"]
                       [lein-figwheel "0.2.5"]
-                      [lein-bower "0.5.1"]
-                      [com.cemerick/clojurescript.test "0.3.1"]]
+                      [lein-bower "0.5.1"]]
 
             :bower-dependencies [[jquery "2.1.3"]
                                  [es5-shim "4.0.3"]]
