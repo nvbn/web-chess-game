@@ -13,7 +13,8 @@
    :start-x start-x
    :start-y start-y})
 
-(defn make-standard-board []
+(defn make-standard-board
+  []
   "Standard chess board implemented as a hash table"
   (hash-map
 

@@ -4,38 +4,47 @@
             [chess-game.images :as images]
             [chess-game.config :as config]))
 
-(defn gray-scale [scale]
+(defn gray-scale
+  [scale]
   "Sets the fill color to a gray scale, values ranging between 0 and 255"
   (graphics/make-color scale scale scale))
 
-(defn light-blue [scale]
+(defn light-blue
+  [scale]
   "A light blue color, designed for clicking on a white square."
   (graphics/make-color (- scale 50) (- scale 50) scale))
 
-(defn dark-blue [scale]
+(defn dark-blue
+  [scale]
   "A dark blue color, designed for clicking on a black square."
   (graphics/make-color scale scale (+ scale 50)))
 
-(defn draw-chessmen []
+(defn draw-chessmen
+  []
   "Draw all the chessmen"
   (doseq [[pos chessman] (:chessboard @(get-dep :env))]
-    (images/draw-chessman chessman pos)))
+    (images/draw-chessman! chessman pos)))
 
-(defn white-default []
+(defn white-default
+  []
   "Default white color"
   (gray-scale 200))
 
-(defn black-default []
+(defn black-default
+  []
   "Default white color"
   (gray-scale 50))
 
-(defn white-selected []
+(defn white-selected
+  []
   (light-blue 255))
 
-(defn black-selected []
+(defn black-selected
+  []
   (dark-blue 50))
 
-(defn tile-fill [color selected]
+(defn tile-fill
+  [color selected]
   "Fill the tile based on color (:white or :black) and whether the tile is currently selected.
 This function will probably take a symbol in the future, with a limited set of valid symbols
 that the square can be in. For example, the square could be:
@@ -56,23 +65,28 @@ There are probably lots more, but those are just some of them that came off the 
       :white (white-default)
       :black (black-default))))
 
-(defn square-should-be-white? [x y]
+(defn square-should-be-white?
+  [x y]
   "Return true if the square at (x, y) should be white"
   (even? (+ x y)))
 
-(defn square-color [x y]
+(defn square-color
+  [x y]
   (if (square-should-be-white? x y)
     :white
     :black))
 
-(defn tile-fill-color [x y selected]
+(defn tile-fill-color
+  [x y selected]
   (tile-fill (square-color x y) selected))
 
-(defn get-color-from [i j]
+(defn get-color-from
+  [i j]
   (let [selected (= (list i j) (:selected-tile @(get-dep :env)))]
     (tile-fill-color i j selected)))
 
-(defn draw-checkered-board []
+(defn draw-checkered-board
+  []
   "Draw the checkered board that all chess games are played on"
   (let [size config/tile-size]
     ;; Iterate both i & j over the sequence 0,1,2..9
