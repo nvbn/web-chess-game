@@ -1,7 +1,4 @@
-(ns chess-game.board
-  (:require [chess-game.colors :as colors]
-            [chess-game.config :as config]
-            [chess-game.drawing :as drawing]))
+(ns chess-game.board)
 
 (defn make-chessman
   [color type start-x start-y]
