@@ -10,7 +10,7 @@
 
 (enable-console-print!)
 
-(defn setup []
+(defn setup! []
   "Initialize everything"
   ;; :chessboard
   ;; A hash-map representing the current chessboard
@@ -24,25 +24,18 @@
     (register! :env env
                :images (get-images!))))
 
-(defn selected-chessman
-  [e]
-  (let [selected-tile (:selected-tile e)
-        chessboard (:chessboard e)]
-    (get chessboard selected-tile)))
-
-(defn draw
+(defn draw!
   []
   "Draw the sketch"
   (drawing/draw-checkered-board)
   (drawing/draw-chessmen))
 
-(defn mark-selected-tile
-  [event]
+(defn mark-selected-tile!
+  [{:keys [x y]}]
   "Mark the tile selected by the click event"
   (let [current (:selected-tile @(get-dep :env))
-        x (.floor js/Math (/ (:x event) config/tile-size))
-        y (.floor js/Math (/ (:y event) config/tile-size))
-        selected (list x y)
+        selected (map #(.floor js/Math (/ % config/tile-size))
+                      [x y])
         env (get-dep :env)]
     (swap! env assoc
            :selected-tile (when-not (= current selected) selected))))
@@ -56,15 +49,15 @@
 (defn on-mouse-pressed
   []
   "Handle mouse press"
-  (let [event (mouse-event-full)]
-    (println event)
-    (mark-selected-tile event)))
+  (doto (mouse-event-full)
+    (println)
+    (mark-selected-tile!)))
 
 (jq/document-ready
   (try (q/sketch :title "Chess board"
                  :size config/board-size
                  :host "canvas"
-                 :setup setup
+                 :setup setup!
                  :mouse-pressed on-mouse-pressed
-                 :draw draw)
+                 :draw draw!)
        (catch :default e (.error js/console e))))
