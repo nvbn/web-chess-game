@@ -19,7 +19,7 @@
   "A dark blue color, designed for clicking on a black square."
   (graphics/make-color scale scale (+ scale 50)))
 
-(defn draw-chessmen
+(defn draw-chessmens!
   []
   "Draw all the chessmen"
   (doseq [[pos chessman] (:chessboard @(get-dep :env))]
@@ -57,13 +57,11 @@ that the square can be in. For example, the square could be:
 
 There are probably lots more, but those are just some of them that came off the top of my head.
 "
-  (if selected
-    (case color
-      :white (white-selected)
-      :black (black-selected))
-    (case color
-      :white (white-default)
-      :black (black-default))))
+  (condp = [color selected]
+    [:white true] (white-selected)
+    [:black true] (black-selected)
+    [:white false] (white-default)
+    [:black false] (black-default)))
 
 (defn square-should-be-white?
   [x y]
@@ -82,7 +80,7 @@ There are probably lots more, but those are just some of them that came off the 
 
 (defn get-color-from
   [i j]
-  (let [selected (= (list i j) (:selected-tile @(get-dep :env)))]
+  (let [selected (= [i j] (:selected-tile @(get-dep :env)))]
     (tile-fill-color i j selected)))
 
 (defn draw-checkered-board

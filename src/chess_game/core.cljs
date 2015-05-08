@@ -28,7 +28,7 @@
   []
   "Draw the sketch"
   (drawing/draw-checkered-board)
-  (drawing/draw-chessmen))
+  (drawing/draw-chessmens!))
 
 (defn mark-selected-tile!
   [{:keys [x y]}]
