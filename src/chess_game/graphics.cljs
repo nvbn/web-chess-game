@@ -8,11 +8,14 @@
 ;; drawing of this game.
 ;;
 
-(defn set-fill! [color]
+(defn set-fill!
+  [color]
   (q/fill color))
 
-(defn make-color [red green blue]
+(defn make-color
+  [red green blue]
   (q/color red green blue))
 
-(defn fill-rect [x y w h]
+(defn fill-rect
+  [x y w h]
   (q/rect x y w h))

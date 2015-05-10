@@ -1,67 +1,63 @@
 (ns ^:figwheel-always chess-game.core
-  (:require [chess-game.config :as config]
-            [chess-game.images :as images]
-            [chess-game.environ :as env]
+  (:require [quil.core :as q]
+            [quil.middleware]
+            [jayq.core :as jq]
+            [clj-di.core :refer [get-dep register!]]
+            [chess-game.config :as config]
+            [chess-game.images :refer [get-images!]]
             [chess-game.board :as board]
-            [chess-game.drawing :as drawing]
-            [quil.core :as q]
-            [quil.middleware :as m]
-            [jayq.core :as jq]))
+            [chess-game.drawing :as drawing]))
 
 (enable-console-print!)
 
-(defn setup []
+(defn setup! []
   "Initialize everything"
-  (images/setup-images)
-
   ;; :chessboard
   ;; A hash-map representing the current chessboard
   ;;
   ;; :selected-tile
   ;; The currently selected tile, after being clicked
-  (env/assoc-in-env [:chessboard] (board/make-standard-board))
-  (env/assoc-in-env [:selected-tile] nil)
+  (let [env (atom {})]
+    (swap! env assoc
+           :chessboard (board/make-standard-board)
+           :selected-tile nil)
+    (register! :env env
+               :images (get-images!))))
 
-
-  (println (env/get-env)))
-
-(defn selected-chessman [e]
-  (let [selected-tile (:selected-tile e)
-        chessboard (:chessboard e)]
-    (get chessboard selected-tile)))
-
-(defn draw []
+(defn draw!
+  []
   "Draw the sketch"
   (drawing/draw-checkered-board)
-  (drawing/draw-chessmen))
+  (drawing/draw-chessmens!))
 
-(defn mark-selected-tile [event]
+(defn mark-selected-tile!
+  [{:keys [x y]}]
   "Mark the tile selected by the click event"
-  (let [current (env/get-in-env [:selected-tile])
-        x (.floor js/Math (/ (:x event) config/tile-size))
-        y (.floor js/Math (/ (:y event) config/tile-size))
-        selected (list x y)]
-    (if (= current selected)
-      (env/assoc-in-env [:selected-tile] nil)
-      (env/assoc-in-env [:selected-tile] selected))))
+  (let [current (:selected-tile @(get-dep :env))
+        selected (map #(.floor js/Math (/ % config/tile-size))
+                      [x y])
+        env (get-dep :env)]
+    (swap! env assoc
+           :selected-tile (when-not (= current selected) selected))))
 
-(defn mouse-event-full []
+(defn mouse-event-full
+  []
   {:x (q/mouse-x)
    :y (q/mouse-y)
    :button (q/mouse-button)})
 
-(defn on-mouse-pressed []
+(defn on-mouse-pressed
+  []
   "Handle mouse press"
-  (let [event (mouse-event-full)]
-    (println event)
-    (mark-selected-tile event)
-    (println (env/get-env))))
+  (doto (mouse-event-full)
+    (println)
+    (mark-selected-tile!)))
 
 (jq/document-ready
   (try (q/sketch :title "Chess board"
                  :size config/board-size
                  :host "canvas"
-                 :setup setup
+                 :setup setup!
                  :mouse-pressed on-mouse-pressed
-                 :draw draw)
+                 :draw draw!)
        (catch :default e (.error js/console e))))
