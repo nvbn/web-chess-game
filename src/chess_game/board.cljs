@@ -1,7 +1,4 @@
-(ns chess-game.board
-  (:require [chess-game.colors :as colors]
-            [chess-game.config :as config]
-            [chess-game.drawing :as drawing]))
+(ns chess-game.board)
 
 (defn make-chessman
   [color type start-x start-y]
@@ -13,7 +10,8 @@
    :start-x start-x
    :start-y start-y})
 
-(defn make-standard-board []
+(defn make-standard-board
+  []
   "Standard chess board implemented as a hash table"
   (hash-map
 

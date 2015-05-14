@@ -2,7 +2,10 @@
 
 ClojureScript plus HTML5 canvas = Chess Game that should be relatively platform independent.
 
-* What's done:
+## Testing
 
+For running all tests:
 
-* What's next:
+```bash
+./scripts/run_tests.sh
+```
