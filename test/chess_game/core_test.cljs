@@ -3,6 +3,7 @@
             [clj-di.test :refer-macros [with-registered]]
             [clj-di.core :refer [get-dep]]
             [chess-game.images :as i]
+            [chess-game.board :as b]
             [chess-game.core :as c]))
 
 (deftest test-setup!
@@ -13,8 +14,12 @@
       (is (not= @(get-dep :env) {})))))
 
 (deftest test-mark-selected-tile
-  (with-registered [:env (atom {:selected-tile nil})]
-    (c/mark-selected-tile! {:x 250 :y 130})
-    (is (= @(get-dep :env) {:selected-tile '(2 1)}))
-    (c/mark-selected-tile! {:x 250 :y 130})
-    (is (= @(get-dep :env) {:selected-tile nil}))))
+  (let [board (b/make-standard-board)]
+    (with-registered [:env (atom {:selected-tile nil
+                                  :chessboard board})]
+      (c/mark-selected-tile! {:x 250 :y 130})
+      (is (= @(get-dep :env) {:selected-tile '(2 1)
+                              :chessboard board}))
+      (c/mark-selected-tile! {:x 250 :y 130})
+      (is (= @(get-dep :env) {:selected-tile nil
+                              :chessboard board})))))

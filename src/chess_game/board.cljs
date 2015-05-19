@@ -1,4 +1,5 @@
-(ns chess-game.board)
+(ns ^:figwheel-always chess-game.board
+  (:require [chess-game.moves :as m]))
 
 (defn make-chessman
   [color type start-x start-y]
@@ -54,3 +55,12 @@
     '(5 7) (make-chessman :white :bishop 5 7)
     '(6 7) (make-chessman :white :knight 6 7)
     '(7 7) (make-chessman :white :rook 7 7)))
+
+(defn update-board
+  [chessboard old-pos new-pos]
+  ; TODO: check for move allowance
+  (if (m/allowed? chessboard old-pos new-pos)
+    (assoc chessboard
+      old-pos nil
+      new-pos (get chessboard old-pos))
+    chessboard))

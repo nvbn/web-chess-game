@@ -23,7 +23,8 @@
   []
   "Draw all the chessmen"
   (doseq [[pos chessman] (:chessboard @(get-dep :env))]
-    (images/draw-chessman! chessman pos)))
+    (when chessman
+      (images/draw-chessman! chessman pos))))
 
 (defn white-default
   []

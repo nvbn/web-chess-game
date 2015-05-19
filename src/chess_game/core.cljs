@@ -33,12 +33,16 @@
 (defn mark-selected-tile!
   [{:keys [x y]}]
   "Mark the tile selected by the click event"
-  (let [current (:selected-tile @(get-dep :env))
+  (let [env (get-dep :env)
+        {:keys [selected-tile chessboard]} @env
         selected (map #(.floor js/Math (/ % config/tile-size))
-                      [x y])
-        env (get-dep :env)]
+                      [x y])]
     (swap! env assoc
-           :selected-tile (when-not (= current selected) selected))))
+           :selected-tile (when-not (= selected-tile selected)
+                            selected)
+           :chessboard (board/update-board chessboard
+                                           selected-tile
+                                           selected))))
 
 (defn mouse-event-full
   []
@@ -46,12 +50,12 @@
    :y (q/mouse-y)
    :button (q/mouse-button)})
 
+(def counter (atom 1))
+
 (defn on-mouse-pressed
   []
   "Handle mouse press"
-  (doto (mouse-event-full)
-    (println)
-    (mark-selected-tile!)))
+  (mark-selected-tile! (mouse-event-full)))
 
 (jq/document-ready
   (try (q/sketch :title "Chess board"
