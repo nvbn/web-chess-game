@@ -14,18 +14,18 @@
 (defn get-images!
   []
   "Set up the chessmen images"
-  {:white {:pawn (load-image! "/images/white-pawn.png")
-           :king (load-image! "/images/white-king.png")
-           :bishop (load-image! "/images/white-bishop.png")
-           :knight (load-image! "/images/white-knight.png")
-           :rook (load-image! "/images/white-rook.png")
-           :queen (load-image! "/images/white-queen.png")}
-   :black {:pawn (load-image! "/images/black-pawn.png")
-           :king (load-image! "/images/black-king.png")
-           :bishop (load-image! "/images/black-bishop.png")
-           :knight (load-image! "/images/black-knight.png")
-           :rook (load-image! "/images/black-rook.png")
-           :queen (load-image! "/images/black-queen.png")}})
+  {:white {:pawn "/images/white-pawn.png"
+           :king "/images/white-king.png"
+           :bishop "/images/white-bishop.png"
+           :knight "/images/white-knight.png"
+           :rook "/images/white-rook.png"
+           :queen "/images/white-queen.png"}
+   :black {:pawn "/images/black-pawn.png"
+           :king "/images/black-king.png"
+           :bishop "/images/black-bishop.png"
+           :knight "/images/black-knight.png"
+           :rook "/images/black-rook.png"
+           :queen "/images/black-queen.png"}})
 
 (defn draw-image-on-grid!
   [image [x y]]

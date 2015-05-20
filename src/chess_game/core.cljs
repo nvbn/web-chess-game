@@ -3,6 +3,8 @@
             [quil.middleware]
             [jayq.core :as jq]
             [clj-di.core :refer [get-dep register!]]
+            [om.core :as om :include-macros true]
+            [om.dom :as dom]
             [chess-game.config :as config]
             [chess-game.images :refer [get-images!]]
             [chess-game.board :as board]
@@ -10,58 +12,69 @@
 
 (enable-console-print!)
 
-(defn setup! []
-  "Initialize everything"
-  ;; :chessboard
-  ;; A hash-map representing the current chessboard
-  ;;
-  ;; :selected-tile
-  ;; The currently selected tile, after being clicked
-  (let [env (atom {})]
-    (swap! env assoc
-           :chessboard (board/make-standard-board)
-           :selected-tile nil)
-    (register! :env env
-               :images (get-images!))))
+(defn svg-img
+  [{:keys [href x y width height]} owner]
+  (reify
+    om/IRenderState
+    (render-state [_ _]
+      (dom/g #{}))
+    om/IDidMount
+    (did-mount [this]
+      (-> (om/get-node owner)
+          jq/$
+          (.html (str "<image x='" x "' y='" y "'
+                       width='" width "' height='" height "'"
+                      "xlink:href='" href "'/>"))))))
 
-(defn draw!
-  []
-  "Draw the sketch"
-  (drawing/draw-checkered-board)
-  (drawing/draw-chessmens!))
+(defn chessboard-tile
+  [{:keys [i j chessman selected]} owner]
+  (reify
+    om/IRenderState
+    (render-state [_ _]
+      (let [x (* i config/tile-size)
+            y (* j config/tile-size)
+            width config/tile-size
+            height config/tile-size
+            is-selected (= @selected [i j])]
+        (dom/g #js {:onClick (fn [] (om/update! selected [i j]))}
+               (dom/rect #js {:x x
+                              :y y
+                              :width width
+                              :height height
+                              :fill (drawing/tile-fill-color i j is-selected)})
+               (when chessman
+                 (om/build svg-img {:href chessman
+                                    :x x
+                                    :y y
+                                    :width width
+                                    :height height})))))))
 
-(defn mark-selected-tile!
-  [{:keys [x y]}]
-  "Mark the tile selected by the click event"
-  (let [env (get-dep :env)
-        {:keys [selected-tile chessboard]} @env
-        selected (map #(.floor js/Math (/ % config/tile-size))
-                      [x y])]
-    (swap! env assoc
-           :selected-tile (when-not (= selected-tile selected)
-                            selected)
-           :chessboard (board/update-board chessboard
-                                           selected-tile
-                                           selected))))
+(defn chessboard
+  [{:keys [chessboard images selected]} owner]
+  (reify
+    om/IRenderState
+    (render-state [_ _]
+      (apply dom/g #js {}
+             (for [i (range 0 config/board-tiles-x)
+                   j (range 0 config/board-tiles-y)
+                   :let [{:keys [color type]} (get chessboard (list i j))
+                         chessman (get-in images [color type])]]
+               (om/build chessboard-tile {:i i
+                                          :j j
+                                          :chessman chessman
+                                          :selected selected}))))))
 
-(defn mouse-event-full
-  []
-  {:x (q/mouse-x)
-   :y (q/mouse-y)
-   :button (q/mouse-button)})
-
-(def counter (atom 1))
-
-(defn on-mouse-pressed
-  []
-  "Handle mouse press"
-  (mark-selected-tile! (mouse-event-full)))
+(defn surface
+  [props owner]
+  (reify
+    om/IRenderState
+    (render-state [_ _]
+      (dom/svg #js {:width (* config/tile-size config/board-tiles-x)
+                    :height (* config/tile-size config/board-tiles-y)}
+               (om/build chessboard props)))))
 
 (jq/document-ready
-  (try (q/sketch :title "Chess board"
-                 :size config/board-size
-                 :host "canvas"
-                 :setup setup!
-                 :mouse-pressed on-mouse-pressed
-                 :draw draw!)
-       (catch :default e (.error js/console e))))
+  (om/root surface (atom {:chessboard (board/make-standard-board)
+                          :images (get-images!)
+                          :selected []})
+           {:target (.getElementById js/document "surface")}))

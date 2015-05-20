@@ -14,7 +14,7 @@
 
 (defn make-color
   [red green blue]
-  (q/color red green blue))
+  (str "rgb(" red "," green "," blue ")"))
 
 (defn fill-rect
   [x y w h]

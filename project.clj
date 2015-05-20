@@ -10,14 +10,17 @@
                            [jayq "2.5.4"]
                            [org.clojure/core.async "0.1.346.0-17112a-alpha"]
                            [quil "2.2.5"]
-                           [clj-di "0.5.0"]]
+                           [clj-di "0.5.0"]
+                           [org.omcljs/om "0.8.8"]]
 
             :plugins [[lein-cljsbuild "1.0.4"]
                       [lein-figwheel "0.2.5"]
                       [lein-bower "0.5.1"]]
 
             :bower-dependencies [[jquery "2.1.3"]
-                                 [es5-shim "4.0.3"]]
+                                 [es5-shim "4.0.3"]
+                                 [react "0.12.2"]
+                                 [react-canvas ""]]
 
             :source-paths ["src"]
 
