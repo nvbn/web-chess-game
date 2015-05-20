@@ -12,19 +12,15 @@
 
 (enable-console-print!)
 
-(defn svg-img
+(defn image
   [{:keys [href x y width height]} owner]
   (reify
     om/IRenderState
     (render-state [_ _]
-      (dom/g #{}))
-    om/IDidMount
-    (did-mount [this]
-      (-> (om/get-node owner)
-          jq/$
-          (.html (str "<image x='" x "' y='" y "'
-                       width='" width "' height='" height "'"
-                      "xlink:href='" href "'/>"))))))
+      (let [html (str "<image x='" x "' y='" y "'"
+                      "width='" width "' height='" height "'"
+                      "xlink:href='" href "'/>")]
+        (dom/g #js {:dangerouslySetInnerHTML #js {:__html html}})))))
 
 (defn chessboard-tile
   [{:keys [i j chessman selected]} owner]
@@ -43,7 +39,7 @@
                               :height height
                               :fill (drawing/tile-fill-color i j is-selected)})
                (when chessman
-                 (om/build svg-img {:href chessman
+                 (om/build image {:href chessman
                                     :x x
                                     :y y
                                     :width width
