@@ -7,9 +7,11 @@
   [state]
   (let [ch (chan)]
     (go-loop [old-pos nil]
-      (let [new-pos (<! ch)]
-        (swap! state assoc :selected (if (= new-pos old-pos) [] new-pos))
-        (swap! state update-in [:chessboard]
-               board/update-board old-pos new-pos)
+      (let [new-pos (<! ch)
+            new-pos (if (= new-pos old-pos) [] new-pos)]
+        (swap! state assoc :selected new-pos)
+        (when (seq new-pos)
+          (swap! state update-in [:chessboard]
+                 board/update-board old-pos new-pos))
         (recur new-pos)))
     ch))
