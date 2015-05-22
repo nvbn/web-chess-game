@@ -16,9 +16,9 @@
       (dom/g {:dangerouslySetInnerHTML {:__html html}}))))
 
 (defn tile-color
-  [x y is-selected]
+  [x y selected]
   (let [color-name (if (even? (+ x y)) :white :black)]
-    (get-in config/colors [color-name is-selected])))
+    (get-in config/colors [color-name selected])))
 
 (defcomponent tile
   [{:keys [i j chessman selected msg-ch]} owner]
@@ -26,14 +26,13 @@
     (let [x (* i config/tile-size)
           y (* j config/tile-size)
           width config/tile-size
-          height config/tile-size
-          is-selected (= selected [i j])]
+          height config/tile-size]
       (dom/g {:onClick #(go (>! msg-ch [:tile-clicked i j]))}
              (dom/rect {:x x
                         :y y
                         :width width
                         :height height
-                        :fill (tile-color i j is-selected)})
+                        :fill (tile-color i j selected)})
              (when chessman
                (om/build image {:href chessman
                                 :x x

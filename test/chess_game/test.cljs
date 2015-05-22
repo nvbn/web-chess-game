@@ -1,9 +1,11 @@
 (ns chess-game.test
   (:require [cljs.test :refer-macros [run-all-tests]]
-            [chess-game.board-test]
-            [chess-game.drawing-test]
-            [chess-game.images-test]
-            [chess-game.moves-test]))
+            [chess-game.components.chessboard-test]
+            [chess-game.components.core-test]
+            [chess-game.components.tile-test]
+            [chess-game.controllers.ai-test]
+            [chess-game.controllers.core-test]
+            [chess-game.controllers.player-test]))
 
 (enable-console-print!)
 
