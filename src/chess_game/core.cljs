@@ -13,6 +13,7 @@
         state (atom {:chessboard (board/make-standard-board)
                      :images (get-images!)
                      :selected []
-                     :msg-ch msg-ch})]
-    (init-router! msg-ch state)
+                     :msg-ch msg-ch
+                     :can-move true})]
+    (init-router! msg-ch state :white :black)
     (init-components! state (.getElementById js/document "surface"))))

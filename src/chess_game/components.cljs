@@ -51,12 +51,23 @@
                 :selected selected
                 :msg-ch msg-ch})))))
 
+(defcomponent message
+  [msg _]
+  (render-state [_ _]
+    (dom/text {:x config/tile-size
+               :y config/tile-size
+               :fill "red"
+               :style {:font-size "60pt"}}
+              msg)))
+
 (defcomponent surface
   [props owner]
   (render-state [_ _]
     (dom/svg {:width (* config/tile-size config/board-tiles-x)
               :height (* config/tile-size config/board-tiles-y)}
-             (om/build chessboard props))))
+             (om/build chessboard props)
+             (when (:win props)
+               (om/build message "You're win!")))))
 
 (defn init-components!
   [state target]
