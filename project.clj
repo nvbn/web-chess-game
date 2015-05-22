@@ -12,7 +12,8 @@
                            [quil "2.2.5"]
                            [clj-di "0.5.0"]
                            [org.omcljs/om "0.8.8"]
-                           [prismatic/om-tools "0.3.11"]]
+                           [prismatic/om-tools "0.3.11"]
+                           [org.clojure/core.match "0.3.0-alpha4"]]
 
             :plugins [[lein-cljsbuild "1.0.4"]
                       [lein-figwheel "0.2.5"]
@@ -20,8 +21,7 @@
 
             :bower-dependencies [[jquery "2.1.3"]
                                  [es5-shim "4.0.3"]
-                                 [react "0.12.2"]
-                                 [react-canvas ""]]
+                                 [react "0.12.2"]]
 
             :source-paths ["src"]
 

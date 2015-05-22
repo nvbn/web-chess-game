@@ -17,14 +17,14 @@
       (dom/g {:dangerouslySetInnerHTML {:__html html}}))))
 
 (defcomponent chessboard-tile
-  [{:keys [i j chessman selected chessboard-ch]} owner]
+  [{:keys [i j chessman selected msg-ch]} owner]
   (render-state [_ _]
     (let [x (* i config/tile-size)
           y (* j config/tile-size)
           width config/tile-size
           height config/tile-size
           is-selected (= selected [i j])]
-      (dom/g {:onClick #(go (>! chessboard-ch [i j]))}
+      (dom/g {:onClick #(go (>! msg-ch [:tile-clicked i j]))}
              (dom/rect {:x x
                         :y y
                         :width width
@@ -38,7 +38,7 @@
                                 :height height}))))))
 
 (defcomponent chessboard
-  [{:keys [chessboard images selected chessboard-ch]} owner]
+  [{:keys [chessboard images selected msg-ch]} owner]
   (render-state [_ _]
     (dom/g (om/build-all chessboard-tile
              (for [i (range 0 config/board-tiles-x)
@@ -49,7 +49,7 @@
                 :j j
                 :chessman chessman
                 :selected selected
-                :chessboard-ch chessboard-ch})))))
+                :msg-ch msg-ch})))))
 
 (defcomponent surface
   [props owner]
@@ -57,3 +57,7 @@
     (dom/svg {:width (* config/tile-size config/board-tiles-x)
               :height (* config/tile-size config/board-tiles-y)}
              (om/build chessboard props))))
+
+(defn init-components!
+  [state target]
+  (om/root surface state {:target target}))

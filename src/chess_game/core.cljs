@@ -1,17 +1,18 @@
 (ns ^:figwheel-always chess-game.core
-  (:require [jayq.core :as jq]
-            [om.core :as om :include-macros true]
+  (:require [cljs.core.async :refer [chan]]
+            [jayq.core :as jq]
             [chess-game.images :refer [get-images!]]
             [chess-game.board :as board]
-            [chess-game.components :refer [surface]]
-            [chess-game.controllers :refer [chessboard-controller]]))
+            [chess-game.components :refer [init-components!]]
+            [chess-game.controllers :refer [init-router!]]))
 
 (enable-console-print!)
 
 (jq/document-ready
-  (let [state (atom {:chessboard (board/make-standard-board)
+  (let [msg-ch (chan)
+        state (atom {:chessboard (board/make-standard-board)
                      :images (get-images!)
-                     :selected []})]
-    (swap! state assoc :chessboard-ch (chessboard-controller state))
-    (om/root surface state
-             {:target (.getElementById js/document "surface")})))
+                     :selected []
+                     :msg-ch msg-ch})]
+    (init-router! msg-ch state)
+    (init-components! state (.getElementById js/document "surface"))))
